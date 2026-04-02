@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>IGA Gestao — Mapa de Telas e Views para o Banco de Dados</title>
+<style>
+:root{--ink:#0f0f0f;--paper:#f5f3ee;--red:#b5432a;--green:#1a6b4a;--blue:#1654a0;--purple:#6b3fa0;--orange:#a06b1a;--muted:#777;--surface:#fff;--border:#ddd8ce;--cbg:#eae6dc;--alt:#faf8f4;--font:'Segoe UI',system-ui,sans-serif;--mono:'Cascadia Code','Fira Code',Consolas,monospace}
+*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}body{font-family:var(--font);background:var(--paper);color:var(--ink);line-height:1.6}
+header{background:linear-gradient(135deg,#1a1614 60%,#2a2420);color:#ece8e0;padding:3rem 2rem 2.5rem}
+header h1{font-size:2rem;font-weight:800;letter-spacing:-.02em}header .sub{opacity:.65;margin:.5rem 0 1.2rem;font-size:1rem}
+header .badges{display:flex;flex-wrap:wrap;gap:.5rem}header .badge{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);padding:.25rem .7rem;border-radius:5px;font-size:.8rem}
+.w{max-width:1150px;margin:0 auto;padding:0 2rem}
+
+/* group */
+.grp{margin:3rem 0 1rem;padding:1rem 1.5rem;border-radius:10px;color:#fff;scroll-margin-top:1.5rem}
+.grp h2{font-size:1.3rem;font-weight:800;display:flex;align-items:center;gap:.6rem}
+.grp-dash{background:#1a6b4a}.grp-erp{background:#6b3fa0}.grp-fin{background:#1654a0}.grp-admin{background:#555}
+
+/* screen */
+.scr{background:var(--surface);border:1px solid var(--border);border-radius:10px;margin:1.5rem 0;overflow:hidden;page-break-inside:avoid;scroll-margin-top:1.5rem;transition:box-shadow .3s}
+.scr:target{box-shadow:0 0 0 3px var(--red),0 4px 20px rgba(181,67,42,.15)}
+.sh{padding:1rem 1.5rem;display:flex;align-items:center;gap:.8rem;flex-wrap:wrap;border-bottom:3px solid var(--red)}
+.sn{background:var(--red);color:#fff;min-width:34px;height:34px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.9rem;flex-shrink:0}
+.sh h3{font-size:1.1rem;font-weight:700;flex:1}.ep{font-family:var(--mono);font-size:.78rem;background:var(--cbg);padding:.2rem .6rem;border-radius:4px;color:var(--green)}
+.sb{padding:1.5rem}
+.desc{color:var(--muted);margin-bottom:1rem;font-size:.9rem}
+
+/* layout */
+.ly{background:var(--cbg);border:1px solid var(--border);border-radius:8px;padding:1rem;margin:1rem 0;font-size:.86rem;line-height:1.8}
+.ly b{color:var(--red)}.ly .r{display:flex;gap:.6rem;flex-wrap:wrap;margin:.4rem 0}
+.ly .b{background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:.35rem .7rem;flex:1;min-width:130px;text-align:center;font-size:.8rem}
+.ly .bh{border-color:var(--red);border-width:2px}.ly .bc{border-color:var(--blue);background:#f0f5ff}
+.ly .bt{border-color:var(--purple);background:#f8f0ff}.ly .bf{border-color:var(--orange);background:#fff8ee}
+
+/* tables */
+table{width:100%;border-collapse:collapse;font-size:.84rem;margin:.7rem 0}
+th{background:#1a1614;color:#ece8e0;padding:.5rem .6rem;text-align:left;font-size:.76rem;text-transform:uppercase;letter-spacing:.05em;font-weight:600}
+td{padding:.45rem .6rem;border-bottom:1px solid var(--border);vertical-align:top}
+tr:nth-child(even) td{background:var(--alt)}
+.cn{font-family:var(--mono);font-weight:600;color:var(--blue);white-space:nowrap}
+.ct{font-family:var(--mono);font-size:.78rem;white-space:nowrap}
+.t{display:inline-block;padding:.08rem .4rem;border-radius:3px;font-size:.7rem;font-weight:600;letter-spacing:.02em;margin-right:2px}
+.tp{background:#fde;color:var(--red)}.tf{background:#edf;color:var(--purple)}.tc{background:#fec;color:var(--orange)}
+.te{background:#dfe;color:var(--green)}.tn{background:#eee;color:#666}.ti{background:#def;color:var(--blue)}
+.ev{background:var(--cbg);padding:.08rem .35rem;border-radius:3px;font-family:var(--mono);font-size:.74rem;display:inline-block;margin:.08rem}
+
+.note{padding:.7rem 1rem;border-radius:0 5px 5px 0;margin:.8rem 0;font-size:.86rem}
+.nw{background:#fff6dd;border-left:4px solid var(--orange)}.nd{background:#fde8e8;border-left:4px solid var(--red)}
+.ni{background:#e3eef9;border-left:4px solid var(--blue)}.note b{display:block;margin-bottom:.2rem}
+
+.sql{background:#1a1614;color:#e8e0d0;padding:.8rem 1rem;border-radius:6px;margin:.8rem 0;font-family:var(--mono);font-size:.8rem;line-height:1.7;overflow-x:auto;white-space:pre}
+
+.intro{margin:2rem 0;padding:1.2rem;background:var(--surface);border:1px solid var(--border);border-radius:8px}
+.intro h2{color:var(--red);font-size:1.1rem;margin-bottom:.6rem}.intro ul{padding-left:1.2rem}.intro li{margin-bottom:.25rem;font-size:.9rem}
+/* sumario */
+.sum{margin:2rem 0;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.5rem 2rem}
+.sum h2{font-size:1.2rem;font-weight:800;margin-bottom:1rem;color:var(--red);display:flex;align-items:center;gap:.5rem}
+.sum-grp{margin:1rem 0 .5rem;font-weight:700;font-size:.95rem;display:flex;align-items:center;gap:.5rem}
+.sum-grp .dot{width:12px;height:12px;border-radius:3px;flex-shrink:0}
+.sum ol{padding-left:1.5rem;margin:0 0 .5rem}.sum li{margin-bottom:.3rem}
+.sum a{color:var(--ink);text-decoration:none;font-size:.9rem;border-bottom:1px dashed var(--border);transition:color .2s}
+.sum a:hover{color:var(--red);border-color:var(--red)}
+.sum .ep-sm{font-family:var(--mono);font-size:.72rem;color:var(--green);margin-left:.4rem}
+
+/* botao topo */
+.btn-topo{position:fixed;bottom:2rem;right:2rem;width:48px;height:48px;border-radius:50%;background:var(--red);color:#fff;border:none;cursor:pointer;font-size:1.3rem;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,.25);z-index:999;opacity:0;pointer-events:none;transition:opacity .3s,transform .3s;transform:translateY(10px)}
+.btn-topo.vis{opacity:1;pointer-events:auto;transform:translateY(0)}
+.btn-topo:hover{background:#8a2e18;transform:translateY(-2px)}
+@media print{body{background:#fff}header{background:#333}.scr{break-inside:avoid}.btn-topo{display:none}}
+@media(max-width:768px){.w{padding:0 1rem}.ly .r{flex-direction:column}header{padding:2rem 1rem}.btn-topo{bottom:1rem;right:1rem;width:42px;height:42px}}
+</style>
+</head>
+<body>
+
+<header id="topo">
+<div class="w">
+<h1>Mapa de Telas e Views — IGA Gestao</h1>
+<p class="sub">Organizado por modulo do menu. Para cada tela: o que ela mostra e exatamente quais dados precisa do banco.</p>
+<div class="badges">
+<span class="badge">4 modulos</span>
+<span class="badge">15 telas</span>
+<span class="badge">16 views</span>
+<span class="badge">150+ campos</span>
+<span class="badge">02/04/2026</span>
+</div>
+</div>
+</header>
+
+<div class="w">
+
+<!-- BOTAO VOLTAR AO TOPO -->
+<button class="btn-topo" id="btnTopo" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Voltar ao topo">&#8593;</button>
+
+<!-- ═══════════ SUMARIO ═══════════ -->
+<div class="sum" id="sumario">
+<h2>&#128203; Sumario</h2>
+
+<div class="sum-grp"><span class="dot" style="background:#1a6b4a"></span> Dashboard</div>
+<ol>
+<li><a href="#t1">Dashboard — Visao Geral</a> <span class="ep-sm">GET /dashboard</span></li>
+<li><a href="#t2">Dashboard — Operacional</a> <span class="ep-sm">7 views simultaneas</span></li>
+<li><a href="#t3">Dashboard — Alertas + Simulador de Lucro</a> <span class="ep-sm">GET /erp/alertas + /erp/fichas-tecnicas + /erp/custo-real</span></li>
+</ol>
+
+<div class="sum-grp"><span class="dot" style="background:#6b3fa0"></span> ERP / Producao</div>
+<ol start="4">
+<li><a href="#t4">Producao — Lotes + Compras Materia-Prima</a> <span class="ep-sm">GET /erp/lotes-producao + /erp/compras-materia-prima</span></li>
+<li><a href="#t5">Ficha Tecnica — Cadastro de Produtos</a> <span class="ep-sm">GET /erp/fichas-tecnicas</span></li>
+<li><a href="#t6">Comercial — Pedidos</a> <span class="ep-sm">GET /erp/pedidos</span></li>
+<li><a href="#t7">Comercial — Ordens de Producao (OP)</a> <span class="ep-sm">GET /erp/ordens-producao</span></li>
+<li><a href="#t8">Comercial — Faturamento</a> <span class="ep-sm">GET /erp/faturamentos</span></li>
+</ol>
+
+<div class="sum-grp"><span class="dot" style="background:#1654a0"></span> Financeiro</div>
+<ol start="9">
+<li><a href="#t9">Financeiro — Visao Geral</a> <span class="ep-sm">GET /finance</span></li>
+<li><a href="#t10">Financeiro — Contas a Pagar</a> <span class="ep-sm">GET /finance/contas-pagar</span></li>
+<li><a href="#t11">Financeiro — Contas a Receber</a> <span class="ep-sm">GET /finance/contas-receber</span></li>
+<li><a href="#t12">Financeiro — Estoque Materia-Prima</a> <span class="ep-sm">GET /finance/estoque-materia-prima</span></li>
+<li><a href="#t13">Financeiro — Estoque Espuma/Aglomerados</a> <span class="ep-sm">GET /finance/estoque-espuma</span></li>
+<li><a href="#t14">Financeiro — Vendas Espuma/Aglomerados</a> <span class="ep-sm">GET /finance/vendas-espuma</span></li>
+<li><a href="#t15">Financeiro — Conciliacao</a> <span class="ep-sm">GET /finance/conciliacao</span></li>
+</ol>
+
+<div class="sum-grp"><span class="dot" style="background:#555"></span> Administracao</div>
+<ol start="16">
+<li><a href="#t16">Usuarios (CRUD)</a> <span class="ep-sm">GET/POST/PUT/DELETE /users</span></li>
+<li><a href="#t17">Auditoria</a> <span class="ep-sm">GET /audit</span></li>
+<li><a href="#t18">Relatorios</a> <span class="ep-sm">GET /reports</span></li>
+</ol>
+
+<div class="sum-grp"><span class="dot" style="background:var(--purple)"></span> Views Extras</div>
+<ol start="19">
+<li><a href="#t19">vw_movimentos_estoque</a> <span class="ep-sm">GET /erp/movimentos-estoque</span></li>
+<li><a href="#t20">vw_custo_real_produto</a> <span class="ep-sm">GET /erp/custo-real</span></li>
+</ol>
+</div>
+
+<div class="intro">
+<h2>Legenda</h2>
+<ul>
+<li><span class="t tp">PK</span> Chave primaria &nbsp; <span class="t tf">FK</span> Chave estrangeira &nbsp; <span class="t tc">CALC</span> Calculado (formula inclusa)</li>
+<li><span class="t te">ENUM</span> Valores fixos (lista exata — frontend rejeita qualquer outro) &nbsp; <span class="t tn">NULL</span> Pode ser null</li>
+<li><span class="t ti">IDX</span> Usado em filtro/ordenacao — recomendado indice</li>
+<li>Cada <b style="color:var(--red)">diagrama de tela</b> mostra cards, graficos, tabelas e filtros com a formula de calculo</li>
+<li><b>O frontend valida TUDO com Zod: campo faltando ou tipo errado = resposta inteira rejeitada</b></li>
+</ul>
+</div>
+
+<!-- ╔════════════════════════════════════╗ -->
+<!-- ║  MODULO 1: DASHBOARD              ║ -->
+<!-- ╚════════════════════════════════════╝ -->
+<div class="grp grp-dash"><h2>&#128200; Dashboard</h2></div>
+
+<!-- DASHBOARD PRINCIPAL -->
+<div class="scr" id="t1">
+<div class="sh"><div class="sn">1</div><h3>Dashboard — Visao Geral</h3><span class="ep">GET /dashboard?period=30d</span></div>
+<div class="sb">
+<div class="ly">
+<b>Filtros:</b> <div class="r"><div class="b bf">Periodo: 7d | 30d | 90d</div><div class="b bf">Tempo real: desativado | 5s | 10s | 30s</div><div class="b bf">Intervalo customizado (data inicio/fim)</div></div>
+<b>Cards KPI (1 por item do array kpis):</b>
+<div class="r"><div class="b bh">vendas<br><small>value + deltaPct + sparkline</small></div><div class="b">usuarios<br><small>value + deltaPct + sparkline</small></div><div class="b">faturamento R$<br><small>value + deltaPct + sparkline</small></div></div>
+<b>Graficos:</b>
+<div class="r"><div class="b bc">Linha: Qtde vendida/dia<br><small>sales[] → date x value</small></div><div class="b bc">Barras: Faturamento/mes<br><small>revenue[] → month x value</small></div></div>
+</div>
+<h4 style="margin:1rem 0 .5rem;font-weight:700;color:var(--red)">View: vw_dashboard</h4>
+<p class="desc">Retorna 1 objeto (nao array) com KPIs, series temporais e ultimas vendas.</p>
+<table>
+<tr><th>Campo</th><th>Tipo SQL</th><th>Tipo JSON</th><th>Descricao</th></tr>
+<tr><td class="cn">kpis</td><td class="ct">JSON array</td><td>KPI[]</td><td>Array com {key, label, value, previousValue, deltaPct, trend[]}</td></tr>
+<tr><td class="cn">kpis[].key</td><td class="ct">ENUM</td><td>string</td><td><span class="ev">vendas</span><span class="ev">usuarios</span><span class="ev">faturamento</span></td></tr>
+<tr><td class="cn">kpis[].label</td><td class="ct">VARCHAR</td><td>string</td><td>Ex: "Total Vendas"</td></tr>
+<tr><td class="cn">kpis[].value</td><td class="ct">DECIMAL</td><td>number</td><td>Valor atual do periodo</td></tr>
+<tr><td class="cn">kpis[].previousValue</td><td class="ct">DECIMAL</td><td>number</td><td>Valor do periodo anterior (para comparacao)</td></tr>
+<tr><td class="cn">kpis[].deltaPct</td><td class="ct">DECIMAL</td><td>number</td><td>Variacao % (positivo = crescimento)</td></tr>
+<tr><td class="cn">kpis[].trend</td><td class="ct">JSON array</td><td>number[]</td><td>Mini grafico (sparkline) — array de ~7 numeros</td></tr>
+<tr><td class="cn">sales</td><td class="ct">JSON array</td><td>SalesPoint[]</td><td>Array com {date: "DD/MM", value: number}</td></tr>
+<tr><td class="cn">revenue</td><td class="ct">JSON array</td><td>RevenuePoint[]</td><td>Array com {month: "Jan", value: number em R$}</td></tr>
+<tr><td class="cn">heatmap</td><td class="ct">JSON array</td><td>HeatmapPoint[]</td><td>Array com {day: "Seg", hour: 0-23, value: number}</td></tr>
+<tr><td class="cn">latest</td><td class="ct">JSON array</td><td>LatestRow[]</td><td>Array com {id, cliente, total, status: pago|pendente|cancelado, data}</td></tr>
+</table>
+</div>
+</div>
+
+<!-- DASHBOARD OPERACIONAL -->
+<div class="scr" id="t2">
+<div class="sh"><div class="sn">2</div><h3>Dashboard — Operacional</h3><span class="ep">Usa 7 views simultaneamente</span></div>
+<div class="sb">
+<p class="desc">Tela de gestao que cruza TODAS as views ERP. Sem filtros — visao geral do mes.</p>
+<div class="ly">
+<b>Alertas ativos (topo):</b>
+<div class="r"><div class="b" style="border-color:var(--red);background:#fff0f0;flex:3">Ate 3 alertas nao lidos → <b>vw_alertas_operacionais</b> WHERE lido=false ORDER BY severidade LIMIT 3</div></div>
+<b>6 Cards KPI:</b>
+<div class="r">
+<div class="b bh">Producao m3/mes<br><small>SUM(volumeTotalM3)<br>lotes Concluidos<br>→ vw_lotes_producao</small></div>
+<div class="b">Custo Medio/m3<br><small>custoTotal / volume<br>lotes Concluidos<br>→ vw_lotes_producao</small></div>
+<div class="b">Faturamento R$<br><small>SUM(valorTotal)<br>WHERE status='Emitida'<br>→ vw_faturamentos</small></div>
+<div class="b">Pedidos Abertos<br><small>COUNT WHERE status<br>NOT IN (Faturado,Cancelado)<br>→ vw_pedidos</small></div>
+<div class="b">OPs em Andamento<br><small>COUNT WHERE<br>status='Em Producao'<br>→ vw_ordens_producao</small></div>
+<div class="b">Margem Media Real<br><small>AVG(margemRealPct)<br>verde>=40, laranja>=30, verm&lt;30<br>→ vw_custo_real_produto</small></div>
+</div>
+<b>2 Tabelas lado a lado:</b>
+<div class="r">
+<div class="b bt">Producao por Densidade<br><small>GROUP BY densidade (Concluidos)<br>→ densidade | lotes | volumeM3 | custoTotal | custoPorM3<br>→ vw_lotes_producao</small></div>
+<div class="b bt">Top 5 Piores Margens<br><small>ORDER BY margemRealPct ASC LIMIT 5<br>→ produto | custoRealTotal | precoVenda | margemRealPct<br>→ vw_custo_real_produto</small></div>
+</div>
+<b>2 Tabelas lado a lado:</b>
+<div class="r">
+<div class="b bt">Vendas por Cliente (top 5)<br><small>GROUP BY cliente ORDER BY valor DESC<br>→ cliente | pedidos | valorTotal | volumeM3<br>→ vw_pedidos</small></div>
+<div class="b bt">Estoque Resumido<br><small>Ultimo saldo por (nivel,item)<br>→ nivel | item | saldo | unidade<br>vermelho se Produto Base e saldo &lt; 5<br>→ vw_movimentos_estoque</small></div>
+</div>
+<b>Tabela full-width:</b>
+<div class="r"><div class="b bt" style="flex:3">Conciliacao Pedido x Produzido x Faturado<br><small>pedidoId | cliente | valorPedido | statusPedido | opId | statusOp | nf | valorFaturado | statusFat<br>→ JOIN vw_pedidos + vw_ordens_producao + vw_faturamentos</small></div></div>
+</div>
+<div class="note ni"><b>7 Views necessarias nesta tela:</b> vw_lotes_producao, vw_pedidos, vw_ordens_producao, vw_faturamentos, vw_custo_real_produto, vw_alertas_operacionais, vw_movimentos_estoque</div>
+</div>
+</div>
+
+<!-- ALERTAS -->
+<div class="scr" id="t3">
+<div class="sh"><div class="sn">3</div><h3>Dashboard — Alertas + Simulador de Lucro</h3><span class="ep">GET /erp/alertas</span><span class="ep">GET /erp/fichas-tecnicas</span><span class="ep">GET /erp/custo-real</span></div>
+<div class="sb">
+<div class="ly">
+<b>4 Cards:</b>
+<div class="r"><div class="b bh">Total Alertas<br><small>COUNT(*)</small></div><div class="b" style="border-color:var(--red)">Alta Severidade<br><small>COUNT WHERE sev='alta'</small></div><div class="b">Nao Lidos<br><small>COUNT WHERE lido=false</small></div><div class="b">Margem Critica<br><small>COUNT WHERE tipo='margem_baixa'</small></div></div>
+<b>Filtros:</b> <div class="r"><div class="b bf">Busca (titulo, descricao)</div><div class="b bf">Tipo (5 opcoes)</div><div class="b bf">Severidade</div><div class="b bf">Lido/Nao lido</div></div>
+<b>Tabela (7 colunas):</b>
+<div class="r"><div class="b bt" style="flex:3">severidade (badge) | data | tipo (tag) | titulo (bold) | descricao | referenciaId (mono) | lido (Novo/Lido)</div></div>
+<b>Simulador de Lucro:</b>
+<div class="r"><div class="b" style="flex:3;text-align:left;border-color:var(--orange);background:#fff8ee;font-size:.82rem">
+<b>Inputs:</b> Select produto (vw_fichas_tecnicas) + Quantidade (1-1000) + Slider preco (50%-150% precoSugerido)<br>
+<b>Resultados:</b> Receita = qtd x preco | Custo = qtd x <b>custoRealTotal</b> (vw_custo_real) | Lucro = receita - custo | Margem % | Volume = qtd x <b>volumeM3</b> (vw_fichas_tecnicas)
+</div></div>
+</div>
+<h4 style="margin:1rem 0 .5rem;font-weight:700;color:var(--red)">View: vw_alertas_operacionais</h4>
+<table>
+<tr><th>Coluna</th><th>Tipo SQL</th><th>Tags</th><th>Descricao</th></tr>
+<tr><td class="cn">id</td><td class="ct">VARCHAR(20)</td><td><span class="t tp">PK</span></td><td></td></tr>
+<tr><td class="cn">data</td><td class="ct">DATE</td><td><span class="t ti">IDX</span></td><td>Data de geracao</td></tr>
+<tr><td class="cn">tipo</td><td class="ct">VARCHAR(25)</td><td><span class="t te">ENUM</span> <span class="t ti">IDX</span></td><td><span class="ev">margem_baixa</span><span class="ev">estoque_critico</span><span class="ev">vazamento_lucro</span><span class="ev">producao_atrasada</span><span class="ev">inadimplencia</span></td></tr>
+<tr><td class="cn">severidade</td><td class="ct">VARCHAR(10)</td><td><span class="t te">ENUM</span> <span class="t ti">IDX</span></td><td><span class="ev">alta</span><span class="ev">media</span><span class="ev">baixa</span></td></tr>
+<tr><td class="cn">titulo</td><td class="ct">VARCHAR(100)</td><td></td><td>"Margem abaixo de 30%"</td></tr>
+<tr><td class="cn">descricao</td><td class="ct">TEXT</td><td></td><td>"Colchao D-28 com margem 26.6% (alvo: 40%)"</td></tr>
+<tr><td class="cn">referenciaId</td><td class="ct">VARCHAR(20)</td><td><span class="t tf">FK</span></td><td>ID da entidade (FT-002, LOT-003, OP-004)</td></tr>
+<tr><td class="cn">lido</td><td class="ct">BOOLEAN</td><td><span class="t ti">IDX</span></td><td>false = Novo (aparece no dashboard)</td></tr>
+</table>
+<div class="note nd"><b>Quando gerar cada alerta:</b><br>
+• <b>margem_baixa:</b> custo_real.margemRealPct &lt; 30% → alta; &lt; 40% → media<br>
+• <b>estoque_critico:</b> estoque_mp.qtdeAtual &lt; qtdeMinima<br>
+• <b>vazamento_lucro:</b> lotes.rendimentoPct &lt; 92%<br>
+• <b>producao_atrasada:</b> ordens.dataPrevista &lt; HOJE AND status='Em Producao'<br>
+• <b>inadimplencia:</b> contas_receber.status='Vencido'</div>
+
+<h4 id="t20" style="margin:1rem 0 .5rem;font-weight:700;color:var(--red)">View: vw_custo_real_produto (usada no Simulador + Dashboard)</h4>
+<table>
+<tr><th>Coluna</th><th>Tipo SQL</th><th>Tags</th><th>Descricao</th></tr>
+<tr><td class="cn">fichaTecnicaId</td><td class="ct">VARCHAR(20)</td><td><span class="t tf">FK</span></td><td>→ vw_fichas_tecnicas.id (JOIN do simulador)</td></tr>
+<tr><td class="cn">produto</td><td class="ct">VARCHAR(100)</td><td></td><td>Dashboard Top 5</td></tr>
+<tr><td class="cn">densidade</td><td class="ct">VARCHAR(10)</td><td></td><td></td></tr>
+<tr><td class="cn">custoMateriaPrima</td><td class="ct">DECIMAL(10,2)</td><td></td><td>Rateio MP real/peca</td></tr>
+<tr><td class="cn">custoEnergia</td><td class="ct">DECIMAL(10,2)</td><td></td><td>Rateio energia</td></tr>
+<tr><td class="cn">custoMaoDeObra</td><td class="ct">DECIMAL(10,2)</td><td></td><td>Rateio MOD</td></tr>
+<tr><td class="cn">custoPerdas</td><td class="ct">DECIMAL(10,2)</td><td></td><td>Rateio perdas</td></tr>
+<tr><td class="cn">custoIndiretos</td><td class="ct">DECIMAL(10,2)</td><td></td><td>Rateio indiretos</td></tr>
+<tr><td class="cn">custoRealTotal</td><td class="ct">DECIMAL(10,2)</td><td><span class="t tc">CALC</span></td><td><b>= soma 5 custos</b>. Simulador: custo por peca</td></tr>
+<tr><td class="cn">custoRealPorM3</td><td class="ct">DECIMAL(10,2)</td><td><span class="t tc">CALC</span></td><td>= custoRealTotal / fichas.volumeM3</td></tr>
+<tr><td class="cn">precoVenda</td><td class="ct">DECIMAL(10,2)</td><td></td><td>Preco real praticado (media vendas)</td></tr>
+<tr><td class="cn">margemRealPct</td><td class="ct">DECIMAL(5,2)</td><td><span class="t tc">CALC</span></td><td><b>= ((precoVenda - custoRealTotal) / precoVenda) * 100</b></td></tr>
+<tr><td class="cn">margemAlvoPct</td><td class="ct">DECIMAL(5,2)</td><td></td><td>Meta (da ficha tecnica)</td></tr>
+<tr><td class="cn">alertaMargem</td><td class="ct">BOOLEAN</td><td><span class="t tc">CALC</span></td><td>= margemRealPct &lt; margemAlvoPct</td></tr>
+</table>
+</div>
+</div>
+
+<!-- ╔════════════════════════════════════╗ -->
+<!-- ║  MODULO 2: ERP / PRODUCAO         ║ -->
+<!-- ╚════════════════════════════════════╝ -->
+<div class="grp grp-erp"><h2>&#9881; ERP / Producao</h2></div>
+
+<!-- PRODUCAO -->
+<div class="scr" id="t4">
+<div class="sh"><div class="sn">4</div><h3>Producao — Lotes + Compras Materia-Prima</h3><span class="ep">GET /erp/lotes-producao</span><span class="ep">GET /erp/compras-materia-prima</span></div>
+<div class="sb">
+<h4 style="font-weight:700;color:var(--red);margin-bottom:.5rem">Aba 1 — Lotes de Producao</h4>
+<div class="ly">
+<b>Filtros:</b> <div class="r"><div class="b bf">Busca (id, operador)</div><div class="b bf">Status</div><div class="b bf">Tipo: Espuma|Aglomerado</div></div>
+<b>4 Cards:</b> <div class="r"><div class="b bh">Total Lotes COUNT</div><div class="b">Volume SUM(volumeTotalM3) m3</div><div class="b">Custo Medio AVG(custoPorM3) R$</div><div class="b">Rendimento AVG(rendimentoPct)% Concluidos</div></div>
+<b>Tabela:</b> <div class="r"><div class="b bt" style="flex:3">id | data | tipo | densidade | volumeTotalM3 | custoTotalLote R$ | custoPorM3 R$ | rendimentoPct (barra verde/lar/verm) | operador | status</div></div>
+</div>
+<table>
+<tr><th>Coluna</th><th>Tipo SQL</th><th>Tags</th><th>Descricao</th></tr>
+<tr><td class="cn">id</td><td class="ct">VARCHAR(20)</td><td><span class="t tp">PK</span></td><td>Tabela + busca</td></tr>
+<tr><td class="cn">data</td><td class="ct">DATE</td><td><span class="t ti">IDX</span></td><td>DD/MM/YYYY + ordenacao</td></tr>
+<tr><td class="cn">tipo</td><td class="ct">VARCHAR(15)</td><td><span class="t te">ENUM</span></td><td><span class="ev">Espuma</span><span class="ev">Aglomerado</span></td></tr>
+<tr><td class="cn">densidade</td><td class="ct">VARCHAR(10)</td><td><span class="t ti">IDX</span></td><td>D-23, D-28, D-33, D-45, 25mm</td></tr>
+<tr><td class="cn">volumeTotalM3</td><td class="ct">DECIMAL(10,4)</td><td></td><td><b>0 = alerta visual</b></td></tr>
+<tr><td class="cn">custoMateriaPrima</td><td class="ct">DECIMAL(10,2)</td><td></td><td rowspan="5">5 componentes de custo (compoe custoTotalLote)</td></tr>
+<tr><td class="cn">custoEnergia</td><td class="ct">DECIMAL(10,2)</td><td></td></tr>
+<tr><td class="cn">custoMaoDeObra</td><td class="ct">DECIMAL(10,2)</td><td></td></tr>
+<tr><td class="cn">custoPerdas</td><td class="ct">DECIMAL(10,2)</td><td></td></tr>
+<tr><td class="cn">custoIndiretos</td><td class="ct">DECIMAL(10,2)</td><td></td></tr>
+<tr><td class="cn">custoTotalLote</td><td class="ct">DECIMAL(12,2)</td><td><span class="t tc">CALC</span></td><td>= soma 5 custos</td></tr>
+<tr><td class="cn">custoPorM3</td><td class="ct">DECIMAL(10,2)</td><td><span class="t tc">CALC</span></td><td>= custoTotalLote / volumeTotalM3</td></tr>
+<tr><td class="cn">rendimentoPct</td><td class="ct">DECIMAL(5,2)</td><td></td><td>0-100%. Barra: verde>=96, laranja>=92, vermelho&lt;92</td></tr>
+<tr><td class="cn">operador</td><td class="ct">VARCHAR(60)</td><td></td><td>Busca</td></tr>
+<tr><td class="cn">status</td><td class="ct">VARCHAR(15)</td><td><span class="t te">ENUM</span> <span class="t ti">IDX</span></td><td><span class="ev">Pendente</span><span class="ev">Em Producao</span><span class="ev">Concluido</span><span class="ev">Faturado</span><span class="ev">Cancelado</span></td></tr>
+<tr><td class="cn">observacoes</td><td class="ct">TEXT</td><td></td><td>Pode ser ""</td></tr>
+</table>
+<div class="note nd"><b>REGRA:</b> Bloquear status='Concluido' se volumeTotalM3=0 OU tipo IS NULL OU densidade IS NULL</div>
+
+<h4 style="font-weight:700;color:var(--red);margin:1.5rem 0 .5rem">Aba 2 — Compras de Materia-Prima</h4>
+<div class="ly">
+<b>Filtros:</b> <div class="r"><div class="b bf">Busca (fornecedor, material, NF)</div><div class="b bf">Classificacao</div><div class="b bf">Status</div></div>
+<b>4 Cards:</b> <div class="r"><div class="b bh">Total Compras SUM(custoTotal)</div><div class="b">Producao SUM WHERE class='Producao'</div><div class="b">Desp. Oper. SUM WHERE class='Desp.Op.'</div><div class="b">Itens COUNT</div></div>
+<b>Tabela:</b> <div class="r"><div class="b bt" style="flex:3">id | data | fornecedor | material | qtde+unidade | custoUnitario | custoTotal | classificacao | notaFiscal | status</div></div>
+</div>
+<table>
+<tr><th>Coluna</th><th>Tipo SQL</th><th>Tags</th><th>Descricao</th></tr>
+<tr><td class="cn">id</td><td class="ct">VARCHAR(20)</td><td><span class="t tp">PK</span></td><td></td></tr>
+<tr><td class="cn">data</td><td class="ct">DATE</td><td><span class="t ti">IDX</span></td><td></td></tr>
+<tr><td class="cn">fornecedor</td><td class="ct">VARCHAR(100)</td><td><span class="t ti">IDX</span></td><td>Busca</td></tr>
+<tr><td class="cn">material</td><td class="ct">VARCHAR(80)</td><td><span class="t ti">IDX</span></td><td>Busca</td></tr>
+<tr><td class="cn">unidade</td><td class="ct">VARCHAR(10)</td><td></td><td>kg, L, kWh</td></tr>
+<tr><td class="cn">quantidade</td><td class="ct">DECIMAL(12,2)</td><td></td><td></td></tr>
+<tr><td class="cn">custoUnitario</td><td class="ct">DECIMAL(10,2)</td><td></td><td></td></tr>
+<tr><td class="cn">custoTotal</td><td class="ct">DECIMAL(12,2)</td><td><span class="t tc">CALC</span></td><td>= quantidade * custoUnitario</td></tr>
+<tr><td class="cn">classificacao</td><td class="ct">VARCHAR(25)</td><td><span class="t te">ENUM</span> <span class="t ti">IDX</span></td><td><span class="ev">Producao</span><span class="ev">Despesa Operacional</span></td></tr>
+<tr><td class="cn">notaFiscal</td><td class="ct">VARCHAR(20)</td><td></td><td>Busca</td></tr>
+<tr><td class="cn">status</td><td class="ct">VARCHAR(15)</td><td><span class="t te">ENUM</span> <span class="t ti">IDX</span></td><td><span class="ev">Recebido</span><span class="ev">Pendente</span><span class="ev">Cancelado</span></td></tr>
+</table>
+</div>
+</div>
+
+<!-- FICHA TECNICA -->
+<div class="scr" id="t5">
+<div class="sh"><div class="sn">5</div><h3>Ficha Tecnica — Cadastro de Produtos</h3><span class="ep">GET /erp/fichas-tecnicas</span></div>
+<div class="sb">
+<div class="ly">
+<b>Filtros:</b> <div class="r"><div class="b bf">Busca (produto, id)</div><div class="b bf">Tipo</div><div class="b bf">Densidade (dinamico)</div><div class="b bf">Ativo: Sim|Nao</div></div>
+<b>4 Cards:</b> <div class="r"><div class="b bh">Produtos Ativos COUNT(ativo=true)</div><div class="b">Custo Medio AVG(custoEstimado)</div><div class="b">Margem Media AVG(margemAlvoPct)</div><div class="b">Volume Medio AVG(volumeM3)</div></div>
+<b>Tabela (13 colunas) + Drawer detalhes ao clicar:</b>
+<div class="r"><div class="b bt" style="flex:3">id | produto | tipo | densidade | dimensoes (HxLxC m) | volumeM3 | pesoEstimadoKg | consumoMPKg | custoEstimado R$ | custoPorM3 R$ | precoSugerido R$ | margemAlvoPct (cor) | ativo</div></div>
+</div>
+<p style="font-size:.85rem;margin:.5rem 0"><b>View ja documentada acima (tela 02 do relatorio anterior)</b> — todos os 17 campos com tipos SQL. Campos criticos: alturaM/larguraM/comprimentoM devem ser > 0. volumeM3 = H*L*C.</p>
+</div>
+</div>
+
+<!-- COMERCIAL -->
+<div class="scr" id="t6">
+<div class="sh"><div class="sn">6</div><h3>Comercial — Pedidos</h3><span class="ep">GET /erp/pedidos</span></div>
+<div class="sb">
+<div class="ly">
+<b>Filtros:</b> <div class="r"><div class="b bf">Busca (cliente, id)</div><div class="b bf">Status (5 opcoes)</div><div class="b bf">Pagamento (5 opcoes)</div></div>
+<b>4 Cards:</b> <div class="r"><div class="b bh">Total Pedidos COUNT</div><div class="b">Valor Total SUM(totalValor) R$</div><div class="b">Total m3 SUM(totalM3)</div><div class="b">Total Pecas SUM(totalPecas)</div></div>
+<b>Tabela + sub-tabela expandivel:</b>
+<div class="r"><div class="b bt" style="flex:3">id | data | cliente | totalPecas | totalM3 | totalValor R$ | formaPagamento | status<br><small style="color:var(--purple)">↳ Expandir: produto | quantidade | volM3Unit | volM3Total | precoUnit | precoTotal</small></div></div>
+</div>
+<div class="note nw"><b>FORMATO:</b> API retorna itens como <b>array JSON aninhado</b> dentro de cada pedido. Nao flat.</div>
+<p style="font-size:.85rem;margin:.5rem 0">Campos do pedido: id, data, cliente, itens[], totalPecas, totalM3, totalValor, formaPagamento (ENUM 5 valores), status (ENUM 5 valores), observacoes.<br>
+Campos de cada item: fichaTecnicaId (FK), produto, quantidade, volumeM3Unitario (CALC), volumeM3Total (CALC), precoUnitario, precoTotal (CALC).</p>
+</div>
+</div>
+
+<div class="scr" id="t7">
+<div class="sh"><div class="sn">7</div><h3>Comercial — Ordens de Producao (OP)</h3><span class="ep">GET /erp/ordens-producao</span></div>
+<div class="sb">
+<div class="ly">
+<b>4 Cards:</b> <div class="r"><div class="b bh">Total OPs</div><div class="b">Em Producao COUNT</div><div class="b">Total m3 SUM(totalM3)</div><div class="b">Consumo Est. SUM(consumoEstimadoM3)</div></div>
+<b>Tabela (11 col):</b> <div class="r"><div class="b bt" style="flex:3">id | data | pedidoIds[] | produtos[] | totalPecas | totalM3 | consumoEstimadoM3 | loteIds[] | dataPrevista | dataConclusao | status</div></div>
+</div>
+<p style="font-size:.85rem">Campos com [] sao <b>arrays de strings JSON</b>: pedidoIds (FK→pedidos), produtos (nomes), loteIds (FK→lotes). dataConclusao pode ser <b>null</b>.</p>
+</div>
+</div>
+
+<div class="scr" id="t8">
+<div class="sh"><div class="sn">8</div><h3>Comercial — Faturamento</h3><span class="ep">GET /erp/faturamentos</span></div>
+<div class="sb">
+<div class="ly">
+<b>4 Cards:</b> <div class="r"><div class="b bh">Total Faturado SUM(valorTotal) Emitidas</div><div class="b">Impostos SUM</div><div class="b">Frete SUM</div><div class="b">NFs Emitidas COUNT</div></div>
+<b>Tabela (11 col):</b> <div class="r"><div class="b bt" style="flex:3">id | data | pedidoId | cliente | numeroNF | valorProdutos | valorFrete | valorImpostos | valorTotal (bold) | formaPagamento | status</div></div>
+</div>
+<p style="font-size:.85rem">pedidoId = FK→pedidos. valorTotal = CALC (produtos+frete+impostos). status ENUM: <span class="ev">Emitida</span><span class="ev">Cancelada</span><span class="ev">Pendente</span></p>
+</div>
+</div>
+
+<!-- ╔════════════════════════════════════╗ -->
+<!-- ║  MODULO 3: FINANCEIRO             ║ -->
+<!-- ╚════════════════════════════════════╝ -->
+<div class="grp grp-fin"><h2>&#128176; Financeiro</h2></div>
+
+<div class="scr" id="t9">
+<div class="sh"><div class="sn">9</div><h3>Financeiro — Visao Geral</h3><span class="ep">GET /finance</span></div>
+<div class="sb">
+<div class="ly">
+<b>7 Cards:</b> <div class="r"><div class="b bh">Receita R$</div><div class="b">Despesas R$</div><div class="b">Saldo R$</div><div class="b">Margem %</div><div class="b">Impostos</div><div class="b">Custos Fixos</div><div class="b">Ticket Medio</div></div>
+<b>Grafico barras:</b> <div class="r"><div class="b bc" style="flex:3">Fluxo Mensal → monthlyFlow[] → receita vs custos vs lucro por mes</div></div>
+<b>Tabela lancamentos:</b> <div class="r"><div class="b bt" style="flex:3">id | date | category | description | amount (verde/vermelho) | saldo acumulado (calc frontend)</div></div>
+</div>
+<p style="font-size:.85rem"><b>Retorna 1 OBJETO</b> (nao array): {receita, custos, lucro, margemPct, monthlyFlow[], entries[]}. entries[].category ENUM: <span class="ev">Receita</span><span class="ev">Custo Fixo</span><span class="ev">Custo Variavel</span><span class="ev">Imposto</span></p>
+</div>
+</div>
+
+<div class="scr" id="t10">
+<div class="sh"><div class="sn">10</div><h3>Financeiro — Contas a Pagar</h3><span class="ep">GET /finance/contas-pagar</span></div>
+<div class="sb">
+<div class="ly">
+<b>4 Cards:</b> <div class="r"><div class="b bh">Total a Pagar SUM(valor)</div><div class="b">Pago SUM(Pago)</div><div class="b">A Vencer SUM</div><div class="b">Vencido SUM</div></div>
+<b>Grafico pizza</b> por status + <b>Tabela:</b> <div class="r"><div class="b bt" style="flex:3">id | fornecedor | descricao | categoria | valor R$ | dataVencimento | dataPagamento | status</div></div>
+</div>
+<p style="font-size:.85rem">categoria ENUM (6): <span class="ev">Materia Prima</span><span class="ev">Energia</span><span class="ev">Folha</span><span class="ev">Impostos</span><span class="ev">Frete</span><span class="ev">Outros</span>. status ENUM: <span class="ev">Pago</span><span class="ev">A vencer</span><span class="ev">Vencido</span>. dataPagamento nullable.</p>
+</div>
+</div>
+
+<div class="scr" id="t11">
+<div class="sh"><div class="sn">11</div><h3>Financeiro — Contas a Receber</h3><span class="ep">GET /finance/contas-receber</span></div>
+<div class="sb">
+<p class="desc">Mesma estrutura de Contas a Pagar, mas: <b>cliente</b> no lugar de fornecedor, <b>dataRecebimento</b> no lugar de dataPagamento (nullable), status: <span class="ev">Recebido</span><span class="ev">A vencer</span><span class="ev">Vencido</span>. <b>Sem campo categoria.</b></p>
+</div>
+</div>
+
+<div class="scr" id="t12">
+<div class="sh"><div class="sn">12</div><h3>Financeiro — Estoque Materia-Prima</h3><span class="ep">GET /finance/estoque-materia-prima</span></div>
+<div class="sb">
+<div class="ly">
+<b>4 Cards:</b> <div class="r"><div class="b bh">Custo Total SUM(custoTotal)</div><div class="b">Itens COUNT</div><div class="b">Criticos COUNT(Critico)</div><div class="b">Baixos COUNT(Baixo)</div></div>
+<b>Tabela (10 col):</b> <div class="r"><div class="b bt" style="flex:3">id | material | unidade | qtdeAtual | qtdeMinima | custoUnitario | custoTotal | ultimaEntrada | fornecedor | status</div></div>
+</div>
+<p style="font-size:.85rem">custoTotal = CALC (qtdeAtual * custoUnitario). status ENUM: <span class="ev">Normal</span><span class="ev">Baixo</span><span class="ev">Critico</span>. Sugestao: Critico se qtdeAtual &lt; qtdeMinima*0.5, Baixo se &lt; qtdeMinima.</p>
+</div>
+</div>
+
+<div class="scr" id="t13">
+<div class="sh"><div class="sn">13</div><h3>Financeiro — Estoque Espuma/Aglomerados</h3><span class="ep">GET /finance/estoque-espuma</span></div>
+<div class="sb">
+<p class="desc">Igual Estoque MP + campos extras: <b>produto</b> (no lugar de material), <b>tipo</b> (<span class="ev">Espuma</span><span class="ev">Aglomerado</span>), <b>densidade</b>. Sem campo fornecedor. Cards separam custo Espuma vs Aglomerado.</p>
+</div>
+</div>
+
+<div class="scr" id="t14">
+<div class="sh"><div class="sn">14</div><h3>Financeiro — Vendas Espuma/Aglomerados</h3><span class="ep">GET /finance/vendas-espuma</span></div>
+<div class="sb">
+<div class="ly">
+<b>4 Cards:</b> <div class="r"><div class="b bh">Faturamento SUM(total)</div><div class="b">Ticket Medio fat/COUNT</div><div class="b">Vendas Espuma SUM</div><div class="b">Vendas Aglom. SUM</div></div>
+<b>Grafico barras</b> (receita por produto) + <b>Tabela ranking</b> + <b>Tabela principal:</b>
+<div class="r"><div class="b bt" style="flex:3">id | data | cliente | produto | tipo | qtde | precoUnitario | total R$ | formaPagamento</div></div>
+</div>
+<p style="font-size:.85rem">total = CALC (qtde * precoUnitario). formaPagamento ENUM (5 valores). tipo ENUM: <span class="ev">Espuma</span><span class="ev">Aglomerado</span>.</p>
+</div>
+</div>
+
+<div class="scr" id="t15">
+<div class="sh"><div class="sn">15</div><h3>Financeiro — Conciliacao</h3><span class="ep">GET /finance/conciliacao</span></div>
+<div class="sb">
+<div class="ly">
+<b>4 Cards:</b> <div class="r"><div class="b bh">Total Vendas SUM(valorVenda)</div><div class="b">Total Pago SUM(valorPago)</div><div class="b">% Conciliado</div><div class="b">Resumo X OK / Y Pend / Z Div</div></div>
+<b>Grafico pizza</b> + <b>Tabela:</b> <div class="r"><div class="b bt" style="flex:3">id | cliente | dataVenda | valorVenda | dataPagamento | valorPago | diferenca (vermelho!=0) | status</div></div>
+</div>
+<p style="font-size:.85rem">diferenca = CALC (valorVenda - valorPago). dataPagamento nullable. status CALC: <span class="ev">Conciliado</span> (dif=0 e pago) <span class="ev">Pendente</span> (sem pgto) <span class="ev">Divergente</span> (dif!=0)</p>
+</div>
+</div>
+
+<!-- ╔════════════════════════════════════╗ -->
+<!-- ║  MODULO 4: ADMINISTRACAO          ║ -->
+<!-- ╚════════════════════════════════════╝ -->
+<div class="grp grp-admin"><h2>&#128274; Administracao</h2></div>
+
+<div class="scr" id="t16">
+<div class="sh"><div class="sn">16</div><h3>Usuarios (CRUD)</h3><span class="ep">GET/POST/PUT/DELETE /users</span></div>
+<div class="sb">
+<div class="ly">
+<b>4 Cards:</b> <div class="r"><div class="b bh">Total COUNT</div><div class="b">Ativos COUNT(active)</div><div class="b">Admins COUNT(admin)</div><div class="b">Novos 30d COUNT(createdAt > 30d)</div></div>
+<b>Tabela + modal form:</b> <div class="r"><div class="b bt" style="flex:3">name | email | role | status | createdAt | Acoes (editar/excluir)</div></div>
+</div>
+<table>
+<tr><th>Campo</th><th>Tipo SQL</th><th>Tags</th><th>Descricao</th></tr>
+<tr><td class="cn">id</td><td class="ct">VARCHAR</td><td><span class="t tp">PK</span></td><td></td></tr>
+<tr><td class="cn">name</td><td class="ct">VARCHAR</td><td></td><td>Tabela + form + busca</td></tr>
+<tr><td class="cn">email</td><td class="ct">VARCHAR</td><td></td><td>Tabela + form + busca. Unico</td></tr>
+<tr><td class="cn">role</td><td class="ct">VARCHAR</td><td><span class="t te">ENUM</span></td><td><span class="ev">admin</span><span class="ev">manager</span><span class="ev">viewer</span></td></tr>
+<tr><td class="cn">status</td><td class="ct">VARCHAR</td><td><span class="t te">ENUM</span></td><td><span class="ev">active</span><span class="ev">inactive</span></td></tr>
+<tr><td class="cn">password</td><td class="ct">VARCHAR</td><td></td><td>Hash. Apenas create/update (nunca retornado no GET)</td></tr>
+<tr><td class="cn">createdAt</td><td class="ct">DATE</td><td><span class="t ti">IDX</span></td><td>Tabela + filtro periodo</td></tr>
+</table>
+</div>
+</div>
+
+<div class="scr" id="t17">
+<div class="sh"><div class="sn">17</div><h3>Auditoria</h3><span class="ep">GET /audit?q=&action=</span></div>
+<div class="sb">
+<div class="ly">
+<b>Tabela (6 col):</b> <div class="r"><div class="b bt" style="flex:3">id | actor (mascarado PII) | action (tag) | target | diff (antes/depois JSON) | at (timestamp)</div></div>
+</div>
+<table>
+<tr><th>Campo</th><th>Tipo SQL</th><th>Tags</th><th>Descricao</th></tr>
+<tr><td class="cn">id</td><td class="ct">VARCHAR</td><td><span class="t tp">PK</span></td><td></td></tr>
+<tr><td class="cn">at</td><td class="ct">DATETIME</td><td><span class="t ti">IDX</span></td><td>Timestamp</td></tr>
+<tr><td class="cn">actor</td><td class="ct">VARCHAR</td><td></td><td>Usuario. Mascarado no frontend (LGPD)</td></tr>
+<tr><td class="cn">action</td><td class="ct">VARCHAR</td><td><span class="t te">ENUM</span> <span class="t ti">IDX</span></td><td><span class="ev">login</span><span class="ev">logout</span><span class="ev">users.create</span><span class="ev">users.update</span><span class="ev">users.delete</span><span class="ev">reports.export</span><span class="ev">pii.reveal</span></td></tr>
+<tr><td class="cn">target</td><td class="ct">VARCHAR</td><td><span class="t tn">NULL</span></td><td>Alvo da acao (opcional)</td></tr>
+<tr><td class="cn">diff</td><td class="ct">JSON</td><td><span class="t tn">NULL</span></td><td>{before:{}, after:{}} (opcional)</td></tr>
+<tr><td class="cn">meta</td><td class="ct">JSON</td><td><span class="t tn">NULL</span></td><td>Metadados extras (opcional)</td></tr>
+</table>
+</div>
+</div>
+
+<div class="scr" id="t18">
+<div class="sh"><div class="sn">18</div><h3>Relatorios</h3><span class="ep">GET /reports?q=&cat=&type=&page=&pageSize=</span></div>
+<div class="sb">
+<p class="desc">Resposta <b>paginada</b>: {items: ReportItem[], total: number, page: number, pageSize: number}</p>
+<table>
+<tr><th>Campo</th><th>Tipo SQL</th><th>Tags</th><th>Descricao</th></tr>
+<tr><td class="cn">id</td><td class="ct">VARCHAR</td><td><span class="t tp">PK</span></td><td>Busca</td></tr>
+<tr><td class="cn">nome</td><td class="ct">VARCHAR</td><td></td><td>Busca</td></tr>
+<tr><td class="cn">categoria</td><td class="ct">VARCHAR</td><td><span class="t te">ENUM</span></td><td><span class="ev">Vendas</span><span class="ev">Usuarios</span><span class="ev">Financeiro</span></td></tr>
+<tr><td class="cn">tipo</td><td class="ct">VARCHAR</td><td><span class="t te">ENUM</span></td><td><span class="ev">Performance</span><span class="ev">Financeiro</span><span class="ev">Conversao</span><span class="ev">Retencao</span><span class="ev">Tendencia</span><span class="ev">TopN</span><span class="ev">Sazonalidade</span><span class="ev">Segmentacao</span></td></tr>
+<tr><td class="cn">valorPrincipal</td><td class="ct">DECIMAL</td><td></td><td>Metrica principal</td></tr>
+<tr><td class="cn">valorSecundario</td><td class="ct">DECIMAL</td><td></td><td>Metrica secundaria</td></tr>
+<tr><td class="cn">segmento</td><td class="ct">VARCHAR</td><td><span class="t te">ENUM</span></td><td><span class="ev">SMB</span><span class="ev">MidMarket</span><span class="ev">Enterprise</span></td></tr>
+<tr><td class="cn">atualizadoEm</td><td class="ct">DATE</td><td><span class="t ti">IDX</span></td><td>Ordenacao + tabela</td></tr>
+</table>
+</div>
+</div>
+
+<!-- VIEW EXTRA: MOVIMENTOS ESTOQUE -->
+<div class="scr" id="t19">
+<div class="sh"><div class="sn" style="background:var(--purple)">+</div><h3>View Extra: vw_movimentos_estoque</h3><span class="ep">GET /erp/movimentos-estoque</span></div>
+<div class="sb">
+<p class="desc">Sem tela propria — alimenta o Dashboard Operacional (Estoque Resumido). Historico de entradas/saidas nos 2 niveis.</p>
+<table>
+<tr><th>Coluna</th><th>Tipo SQL</th><th>Tags</th><th>Descricao</th></tr>
+<tr><td class="cn">id</td><td class="ct">VARCHAR(20)</td><td><span class="t tp">PK</span></td><td>Sequencial (MAX para ultimo)</td></tr>
+<tr><td class="cn">data</td><td class="ct">DATETIME</td><td><span class="t ti">IDX</span></td><td></td></tr>
+<tr><td class="cn">nivelEstoque</td><td class="ct">VARCHAR(15)</td><td><span class="t te">ENUM</span> <span class="t ti">IDX</span></td><td><span class="ev">Insumo</span><span class="ev">Produto Base</span></td></tr>
+<tr><td class="cn">item</td><td class="ct">VARCHAR(60)</td><td><span class="t ti">IDX</span></td><td>"TDI", "Espuma D-23" etc</td></tr>
+<tr><td class="cn">tipoMovimento</td><td class="ct">VARCHAR(10)</td><td><span class="t te">ENUM</span></td><td><span class="ev">Entrada</span><span class="ev">Saida</span></td></tr>
+<tr><td class="cn">origem</td><td class="ct">VARCHAR(15)</td><td><span class="t te">ENUM</span></td><td><span class="ev">Compra</span><span class="ev">Producao</span><span class="ev">Venda</span><span class="ev">OP</span><span class="ev">Ajuste</span><span class="ev">Devolucao</span></td></tr>
+<tr><td class="cn">referenciaId</td><td class="ct">VARCHAR(20)</td><td><span class="t tf">FK</span></td><td>ID da compra/lote/pedido/OP</td></tr>
+<tr><td class="cn">quantidade</td><td class="ct">DECIMAL(12,4)</td><td></td><td></td></tr>
+<tr><td class="cn">unidade</td><td class="ct">VARCHAR(10)</td><td></td><td>kg, L, m3</td></tr>
+<tr><td class="cn">custoUnitario</td><td class="ct">DECIMAL(10,2)</td><td></td><td></td></tr>
+<tr><td class="cn">custoTotal</td><td class="ct">DECIMAL(12,2)</td><td><span class="t tc">CALC</span></td><td>= quantidade * custoUnitario</td></tr>
+<tr><td class="cn">saldoAnterior</td><td class="ct">DECIMAL(12,4)</td><td></td><td></td></tr>
+<tr><td class="cn">saldoAtual</td><td class="ct">DECIMAL(12,4)</td><td></td><td>Dashboard pega MAX(id) por (nivel,item)</td></tr>
+</table>
+<div class="sql"><span style="color:#f0a040">-- Query do Dashboard Estoque Resumido:</span>
+SELECT nivelEstoque, item, saldoAtual, unidade
+FROM vw_movimentos_estoque m1
+WHERE m1.id = (SELECT MAX(m2.id) FROM vw_movimentos_estoque m2
+               WHERE m2.nivelEstoque = m1.nivelEstoque AND m2.item = m1.item)
+<span style="color:#777">-- Alerta: se nivelEstoque='Produto Base' AND saldoAtual < 5.0</span></div>
+</div>
+</div>
+
+<p style="text-align:center;color:var(--muted);margin:3rem 0 1.5rem;font-size:.84rem">
+IGA Gestao v1.0 — 02/04/2026 — Gerado do codigo-fonte do frontend<br>
+<b>Frontend valida TODAS as respostas com Zod: campo faltando ou tipo errado = resposta rejeitada</b>
+</p>
+</div>
+
+<script>
+// Botao "voltar ao topo" — aparece ao rolar mais de 400px
+const btn = document.getElementById('btnTopo');
+let ticking = false;
+window.addEventListener('scroll', function() {
+  if (!ticking) {
+    window.requestAnimationFrame(function() {
+      if (window.scrollY > 400) {
+        btn.classList.add('vis');
+      } else {
+        btn.classList.remove('vis');
+      }
+      ticking = false;
+    });
+    ticking = true;
+  }
+});
+</script>
+</body>
+</html>
