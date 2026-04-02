@@ -1,0 +1,36 @@
+
+
+echo "# express_app" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/marcosbras-ui/express_app.git
+git push -u origin main
+
+
+git remote add origin https://github.com/marcosbras-ui/express_app.git
+git branch -M main
+git push -u origin main
+
+
+https://www.geeksforgeeks.org/devops/docker-docker-container-for-node-js/
+
+Inicializa projeto nodejs
+c:\> npm init
+
+Execução na máquina local
+c:\> npm run dev
+
+Faz a construção de acordo com Dockerfile
+c:\> docker build  -t docker-container-nodejs .
+
+Faz o mapeamento entre volume do host e do container
+c:\> docker run -d -p 8000:3000 -v .:/server docker-container-nodejs
+
+Faz a execução do container com abertura do terminal
+c:\> docker exec -it <Container ID> sh
+
+
+
+
