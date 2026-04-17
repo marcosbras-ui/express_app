@@ -27,6 +27,8 @@ git remote add origin git@github.com:marcosbras-ui/express_app.git
 git branch -M main
 git push -u origin main
 
+#######################################################################
+
 
 https://www.geeksforgeeks.org/devops/docker-docker-container-for-node-js/
 
@@ -44,6 +46,99 @@ c:\> docker run -d -p 8000:3000 -v .:/server docker-container-nodejs
 
 Faz a execução do container com abertura do terminal
 c:\> docker exec -it <Container ID> sh
+
+
+#####################################################################
+
+Para gerar um par de chaves RSA no Linux, o método mais comum e direto é utilizar a ferramenta nativa ssh-keygen. [1, 2] 
+## Passo a Passo para Gerar a Chave
+
+   1. Abra o Terminal: Você pode usar qualquer emulador de terminal no seu sistema Linux.
+   2. Execute o Comando: Use o seguinte comando para criar uma chave do tipo RSA:
+   
+   ssh-keygen -t rsa -b 4096 -C "seu_email@exemplo.com"
+   
+   * -t rsa: Especifica o tipo de chave (RSA).
+      * -b 4096: Define o tamanho da chave em bits (4096 é o padrão recomendado para maior segurança).
+      * -C "comentário": Adiciona um comentário (geralmente seu e-mail) para identificar a chave.
+   3. Local de Salvamento: O sistema perguntará onde salvar a chave. O padrão é /home/usuario/.ssh/id_rsa. Pressione Enter para aceitar.
+   4. Defina uma Passphrase: Você terá a opção de inserir uma senha (passphrase) para proteger o arquivo da chave privada. Se preferir não usar senha, pressione Enter duas vezes. [1, 3, 4, 5, 6, 7] 
+
+## Arquivos Gerados
+Após a execução, dois arquivos serão criados no diretório especificado (geralmente ~/.ssh/): [8, 9] 
+
+* id_rsa: Sua chave privada. Nunca a compartilhe com ninguém.
+* id_rsa.pub: Sua chave pública. Esta é a que você envia para servidores, GitHub ou outros serviços. [1, 10, 11, 12, 13] 
+* 
+
+## Alternativa com OpenSSL
+Se o seu objetivo é gerar uma chave privada RSA para outros fins (como certificados SSL), você pode usar o OpenSSL: [14, 15, 16] 
+
+openssl genrsa -out private_key.pem 2048
+
+Deseja saber como adicionar essa chave ao seu GitHub ou enviá-la para um servidor remoto?
+
+[1] [https://www.ibm.com](https://www.ibm.com/docs/pt-br/cognos-analytics/12.0.0?topic=content-generating-ssh-keys-linux-mac)
+[2] [https://www.ssh.com](https://translate.google.com/translate?u=https://www.ssh.com/academy/ssh/keygen&hl=pt&sl=en&tl=pt&client=sge#:~:text=O%20Ssh%2Dkeygen%20%C3%A9%20uma%20ferramenta%20para%20criar,logins%2C%20autentica%C3%A7%C3%A3o%20%C3%BAnica%20%28SSO%29%20e%20outros%20processos.)
+[3] [https://docs.github.com](https://docs.github.com/pt/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)
+[4] [https://www.servers.com](https://translate.google.com/translate?u=https://www.servers.com/kb/linux-administration/how-to-create-a-new-ssh-key-pair&hl=pt&sl=en&tl=pt&client=sge)
+[5] [https://www.youtube.com](https://www.youtube.com/watch?v=B4p5P3UlD6I&t=68)
+[6] [https://man7.org](https://translate.google.com/translate?u=https://man7.org/linux/man-pages/man1/ssh-keygen.1.html&hl=pt&sl=en&tl=pt&client=sge)
+[7] [https://insights.itexto.com.br](https://insights.itexto.com.br/como-criar-um-par-de-chaves-publica-privada-ssh-no-linux/)
+[8] [https://learn.microsoft.com](https://learn.microsoft.com/pt-br/azure/virtual-machines/linux/mac-create-ssh-keys)
+[9] [https://adrianorosa.com](https://adrianorosa.com/blog/seguranca/como-criar-ssh-key-pair-unix.html#:~:text=Ap%C3%B3s%20executar%20o%20comando%20para%20gerar%20SSH,nomes%20e%20diret%C3%B3rios%20diferentes%20se%20for%20necess%C3%A1rio.)
+[10] [https://git-scm.com](https://git-scm.com/book/pt-br/v2/Git-no-servidor-Gerando-Sua-Chave-P%C3%BAblica-SSH#:~:text=A%20chave%20tem%20mais%20ou%20menos%20esta,chaves%20SSH%20em%20https://docs.github.com/pt/authentication/connecting%2Dto%2Dgithub%2Dwith%2Dssh.%20prev%20%7C%20next.)
+[11] [https://www.techtarget.com](https://translate.google.com/translate?u=https://www.techtarget.com/searchsecurity/tutorial/Use-ssh-keygen-to-create-SSH-key-pairs-and-more&hl=pt&sl=en&tl=pt&client=sge#:~:text=O%20comando%20ssh%2Dkeygen%20cria%20dois%20arquivos%2C%20um,O%20arquivo%20id%2Drsa%20cont%C3%A9m%20a%20chave%20privada.)
+[12] [https://www.youtube.com](https://www.youtube.com/watch?v=dk5aPHalZgc)
+[13] [https://docs.oracle.com](https://docs.oracle.com/pt-br/learn/generate_ssh_keys/index.html#:~:text=Observe%20na%20sa%C3%ADda%20que%20h%C3%A1%20dois%20arquivos%2C,e%20n%C3%A3o%20compartilhe%20seu%20conte%C3%BAdo%20com%20ningu%C3%A9m.)
+[14] [https://www.ibm.com](https://www.ibm.com/docs/pt-br/ts4500-tape-library?topic=certificates-generating-private-key#:~:text=O%20comando%20genrsa%20%C3%A9%20usado%20para%20gerar,%E2%80%93pass%20inclui%20prote%C3%A7%C3%A3o%20de%20senha%20no%20certificado.)
+[15] [https://docs.oracle.com](https://docs.oracle.com/cd/E40709_01/html/E40365/z400002d1658627.html#:~:text=Obter%20o%20Certificado%20SSL%20e%20a%20Chave,usando%20o%20kit%20de%20ferramentas%20OpenSSL%2C%20digite:)
+[16] [https://www.uptimia.com](https://www.uptimia.com/pt/learn/guia-para-openssl)
+
+
+
+#####################################################################
+
+O comando cat é usado para exibir o conteúdo da sua chave SSH pública no terminal, o que é útil quando você precisa copiá-la para serviços como GitHub, GitLab ou um servidor remoto [1, 3, 25]. [1, 2, 3] 
+## Comandos Principais
+O comando exato depende do algoritmo que você usou ao gerar a chave:
+
+* Chave RSA (padrão antigo): cat ~/.ssh/id_rsa.pub [1, 6, 25]
+* Chave ED25519 (moderna e recomendada): cat ~/.ssh/id_ed25519.pub [1, 20, 25] [1, 3, 4, 5] 
+* 
+
+No Windows (Prompt de Comando), use o comando equivalente type:
+
+* type %userprofile%\.ssh\id_rsa.pub [3, 16] [2, 6] 
+* 
+
+## Como copiar direto para a área de transferência
+Em vez de apenas exibir no terminal, você pode enviar o conteúdo diretamente para o "copiar" do sistema:
+
+* macOS: pbcopy < ~/.ssh/id_rsa.pub [1, 3, 5]
+* Linux (requer xclip): xclip -sel clip < ~/.ssh/id_rsa.pub [3, 19]
+* Windows (PowerShell/Git Bash): cat ~/.ssh/id_rsa.pub | clip [3, 15] [1, 2, 7, 8, 9] 
+* 
+
+## Dicas importantes
+
+* Verifique se a chave existe: Se você receber um erro de "arquivo não encontrado", use ls -al ~/.ssh para listar os arquivos na pasta e confirmar o nome correto da sua chave pública (que sempre termina em .pub) [1, 24, 25].
+* Nunca compartilhe a chave privada: Arquivos sem a extensão .pub (como id_rsa ou id_ed25519) são suas chaves privadas. Nunca use o comando cat neles para exibir ou compartilhar com ninguém, pois elas garantem acesso total à sua identidade [3, 16, 25].
+* Formato correto: Uma chave pública válida geralmente começa com o tipo do algoritmo (ex: ssh-rsa ou ssh-ed25519) e termina com o nome do seu computador ou e-mail [1, 20, 27]. [1, 2, 3, 10, 11] 
+
+Você gostaria de ajuda para gerar uma nova chave ou para adicioná-la a algum serviço específico como o [GitHub](https://github.com/)?
+
+[1] [https://stackoverflow.com](https://stackoverflow.com/questions/3828164/how-do-i-access-my-ssh-public-key)
+[2] [https://www.techrepublic.com](https://www.techrepublic.com/article/how-to-view-your-ssh-keys-in-linux-macos-and-windows/)
+[3] [https://www.digitalocean.com](https://www.digitalocean.com/community/tutorials/how-to-configure-ssh-key-based-authentication-on-a-linux-server)
+[4] [https://www.inmotionhosting.com](https://www.inmotionhosting.com/support/server/ssh/how-to-add-ssh-keys-to-your-github-account/)
+[5] [https://support.reclaimhosting.com](https://support.reclaimhosting.com/hc/en-us/articles/8421003621015-Generating-SSH-key-pairs)
+[6] [https://viniciuspaes.com](https://viniciuspaes.com/linux/tutorial-criar-chave-ssh-key-gitlab-github-mac-osx-linux-ubuntu/)
+[7] [https://docs.github.com](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+[8] [https://docs.gitlab.com](https://docs.gitlab.com/user/ssh/)
+[9] [https://stackoverflow.com](https://stackoverflow.com/questions/16638092/copying-a-rsa-public-key-to-clipboard)
+[10] [https://docs.github.com](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/checking-for-existing-ssh-keys)
+[11] [https://spin.atomicobject.com](https://spin.atomicobject.com/ssh-keys-linux/#:~:text=The%20file%20that%20doesn%27t%20end%20in%20.,private%20key%20%E2%80%94%20don%27t%20share%20that%20one.)
 
 
 
